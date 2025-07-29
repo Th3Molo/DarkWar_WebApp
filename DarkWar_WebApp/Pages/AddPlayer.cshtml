@@ -1,0 +1,62 @@
+﻿@page
+@model DarkWar_WebApp.Pages.AddPlayerModel
+@{
+    ViewData["Title"] = "Add Player";
+}
+
+<h2>Add Player</h2>
+
+<form method="post">
+    <div class="form-group mb-4">
+        <label asp-for="PlayerName"></label>
+        <input asp-for="PlayerName" class="form-control" />
+        <span asp-validation-for="PlayerName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="CP"></label>
+        <input asp-for="CP" class="form-control" type="number" step="0.1" />
+        <span asp-validation-for="CP" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="SelectedRank"></label>
+        <select asp-for="SelectedRank" class="form-control" asp-items="Model.Ranks">
+            <option title="">-- Choose Rank --</option>
+        </select>
+        <span asp-validation-for="SelectedRank" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="WatchtowerLevel"></label>
+        <select asp-for="WatchtowerLevel" class="form-control watchtower-select">
+            @for (int i = 1; i <= 30; i++)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
+        <span asp-validation-for="WatchtowerLevel" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Player</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.watchtower-select').select2({
+                minimumResultsForSearch: Infinity, // kein Suchfeld
+                dropdownAutoWidth: true,
+                width: '150',
+                dropdownCssClass: "limit-height"
+            });
+        });
+    </script>
+
+    <style>
+        .select2-results__options {
+            max-height: 150px !important; 
+            overflow-y: auto !important;
+        }
+    </style>
+}

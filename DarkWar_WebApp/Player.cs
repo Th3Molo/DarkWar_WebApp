@@ -1,0 +1,21 @@
+﻿namespace DarkWar_WebApp
+{
+    public enum Rank
+    {
+        R1 = 1,
+        R2 = 2,
+        R3 = 3,
+        R4 = 4,
+        R5 = 5,
+    }
+
+    public class Player
+    {
+        public string PlayerName { get; set; } = string.Empty;
+        public double CP { get; set; } = 0;
+        public int WatchtowerLevel { get; set; } = 1;
+        public Rank Rank { get; set; } = Rank.R1;
+        public List<string> Violationlist { get; set; } = new List<string>();
+        public List<Events> Events { get; set; } = new List<Events>();
+    }
+}
