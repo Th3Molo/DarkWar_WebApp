@@ -21,10 +21,22 @@
             <tr>
                 <td>@player.PlayerName</td>
                 <td>@player.Rank</td>
-                <td>@player.CP</td>
+                <td>@player.CP.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</td>
                 <td>@player.WatchtowerLevel</td>
             </tr>
         }
     </tbody>
 </table>
 
+<script>
+    function formatCP(input) {
+        let raw = input.value.replace(/\D/g, ""); // nur Zahlen
+        if (!raw) {
+            input.value = "";
+            return;
+        }
+
+        let withDots = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        input.value = withDots;
+    }
+</script>

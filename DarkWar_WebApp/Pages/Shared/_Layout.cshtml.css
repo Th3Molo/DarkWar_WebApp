@@ -3,8 +3,33 @@ for details on configuring this project to bundle and minify static web assets. 
 
 a.navbar-brand {
   white-space: normal;
-  text-align: center;
+  text-align: start;
   word-break: break-all;
+}
+
+nav.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    background-color: #1E1E1E;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    min-height: 75px;
+    color: #830BC9;
+}
+
+.collapse {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 25px;
+}
+.collapse.nav-link {
+    color: #830BC9;
 }
 
 a {
@@ -12,15 +37,15 @@ a {
 }
 
 .btn-primary {
-  color: #fff;
+  color: #830BC9;
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: #a935f8;
+  background-color: #af5dd5;
+  border-color: #FFF;
 }
 
 .border-top {

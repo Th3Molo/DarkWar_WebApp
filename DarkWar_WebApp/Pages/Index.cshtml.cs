@@ -26,9 +26,11 @@ namespace DarkWar_WebApp.Pages
                 HttpContext.Session.SetString("LoggedIn", "true");
                 return RedirectToPage("/Index");
             }
-
-            LoginFailed = true;
-            return Page();
+            else
+            {
+                LoginFailed = true;
+                return Page();
+            }
         }
     }
 }
