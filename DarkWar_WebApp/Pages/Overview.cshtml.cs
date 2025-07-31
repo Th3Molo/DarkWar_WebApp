@@ -1,22 +1,36 @@
-using Microsoft.AspNetCore.Mvc;
+using DarkWar_WebApp;
+using DarkWar_WebApp.data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
-namespace DarkWar_WebApp.Pages
+namespace DarkWar_WebApp.Pages 
 {
     public class OverviewModel : PageModel
     {
-        public List<Player> PlayerList { get; set; } = new List<Player>();
-        public void OnGet()
+        private readonly AppDbContext _context;
+        public List<Player> PlayerList { get; set; } = new();
+
+        public OverviewModel(AppDbContext context)
         {
-            PlayerList.Add(new Player()
+            _context = context;
+        }
+
+        public async Task OnGetAsync()
+        {
+            try
             {
-                PlayerName = "Wuwu13",
-                CP = 135500000,
-                Rank = Rank.R5,
-                WatchtowerLevel = 30,
-                Events = new(),
-                Violationlist = new(),
-            });
+                var orderedtable = _context.Players.OrderByDescending(p => p.Rank)
+                                                   .ThenByDescending(p => p.CP)
+                                                   .ThenBy(p => p.PlayerName);
+
+                PlayerList = await orderedtable.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Fehler beim Laden der Daten: " + ex.Message);
+                // Option: eine Fehlermeldung an ViewData senden:
+                ViewData["Fehler"] = "Die Spielerdaten konnten nicht geladen werden.";
+            }
         }
     }
 }

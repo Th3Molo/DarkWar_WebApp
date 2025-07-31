@@ -71,3 +71,9 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+select.watchtower-select {
+    background-color: #212529; /* entspricht bg-dark */
+    color: #f8f9fa; /* entspricht text-light */
+    border: none;
+}

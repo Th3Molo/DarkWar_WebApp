@@ -18,19 +18,23 @@ namespace DarkWar_WebApp.Pages
 
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(string username, string password)
         {
-            // Dummy-Daten – du kannst das später durch echte prüfen
-            if (Username == "admin" && Password == "geheim123")
+            if (username == "admin" && password == "geheim1234")
             {
-                HttpContext.Session.SetString("LoggedIn", "true");
-                return RedirectToPage("/Index");
+                HttpContext.Session.SetString("IsLoggedIn", "true");
+                return RedirectToPage("/AddPlayer");
             }
-            else
-            {
-                LoginFailed = true;
-                return Page();
-            }
+
+            ModelState.AddModelError("", "Login fehlgeschlagen");
+            return Page();
         }
+
+        public IActionResult OnPostLogout()
+        {
+            HttpContext.Session.Clear(); // Oder nur: Remove("IsLoggedIn")
+            return RedirectToPage("/Index");
+        }
+
     }
 }
