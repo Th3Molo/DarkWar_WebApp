@@ -1,0 +1,25 @@
+﻿@page
+@model DarkWar_WebApp.Pages.ChatModel
+@{
+
+    <h2 class="text-light mb-2">Chat</h2>
+
+    <form method="post">
+        <input asp-for="Username" placeholder="Name" class="form-control mb-2" />
+        <textarea asp-for="Content" placeholder="Nachricht" class="form-control mb-2"></textarea>
+        <button type="submit" class="btn btn-dark">Senden</button>
+    </form>
+
+    <hr />
+
+    <div>
+        @foreach (var msg in Model.Messages)
+        {
+            <div class="mb-2 text-light">
+                <strong>@msg.Username</strong> <small class="text-muted">(@msg.Timestamp.ToString("MM.dd:HH:mm"))</small><br />
+                <span>@msg.Content</span>
+            </div>
+        }
+    </div>
+
+}

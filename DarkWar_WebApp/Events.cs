@@ -10,6 +10,7 @@
         #endregion
 
         #region Constructor
+        public Events() { }
         private Events(string eventname, bool haveparticipated, double points) 
         {
             Eventname = eventname;
