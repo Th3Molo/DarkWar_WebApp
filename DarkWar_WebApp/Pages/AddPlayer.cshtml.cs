@@ -15,7 +15,7 @@ namespace DarkWar_WebApp.Pages
         public string PlayerName { get; set; }
 
         [BindProperty]
-        public double CP { get; set; }
+        public long CP { get; set; }
 
         [BindProperty]
         public Rank SelectedRank { get; set; }
