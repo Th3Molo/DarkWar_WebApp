@@ -29,7 +29,7 @@
 
     <div class="form-group mb-4">
         <label asp-for="WatchtowerLevel"></label>
-        <select asp-for="WatchtowerLevel" class="form-control watchtower-select">
+        <select asp-for="WatchtowerLevel" class="form-control bg-dark border-0 text-light watchtower-select">
             @for (int i = 1; i <= 30; i++)
             {
                 <option value="@i">@i</option>

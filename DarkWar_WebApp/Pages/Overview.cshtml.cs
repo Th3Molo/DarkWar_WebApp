@@ -15,7 +15,7 @@ namespace DarkWar_WebApp.Pages
             _context = context;
         }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
             try
             {
@@ -23,7 +23,7 @@ namespace DarkWar_WebApp.Pages
                                                    .ThenByDescending(p => p.CP)
                                                    .ThenBy(p => p.PlayerName);
 
-                PlayerList = await orderedtable.ToListAsync();
+                PlayerList = orderedtable.ToList();
             }
             catch (Exception ex)
             {
