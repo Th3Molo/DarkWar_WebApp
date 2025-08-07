@@ -2,6 +2,7 @@ using DarkWar_WebApp.data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Globalization;
 using System.Linq;
 
 namespace DarkWar_WebApp.Pages
@@ -15,7 +16,18 @@ namespace DarkWar_WebApp.Pages
         public string PlayerName { get; set; }
 
         [BindProperty]
-        public long CP { get; set; }
+        public long CP
+        {
+            get {  return CP; }
+            set 
+            { 
+                if (long.TryParse(value.ToString(), out long result))
+                    value = result;
+
+                CP = value;
+            }
+        }
+
 
         [BindProperty]
         public Rank SelectedRank { get; set; }

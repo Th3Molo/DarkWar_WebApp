@@ -13,7 +13,7 @@
     {
         public int ID { get; set; } //PK
         public string PlayerName { get; set; } = string.Empty;
-        public double CP { get; set; } = 0;
+        public long CP { get; set; } = 0;
         public int WatchtowerLevel { get; set; } = 1;
         public Rank Rank { get; set; } = Rank.R1;
         public string ViolationlistSerialized { get; set; } = string.Empty;
