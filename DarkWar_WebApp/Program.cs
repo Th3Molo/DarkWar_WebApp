@@ -1,6 +1,7 @@
 using DarkWar_WebApp.data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
@@ -25,12 +26,19 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor(); // <-- wichtig, wenn du in Razor auf Session zugreifst
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=players.db"));
+/*builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=players.db"));*/
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

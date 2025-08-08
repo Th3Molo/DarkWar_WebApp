@@ -14,7 +14,7 @@
         public int ID { get; set; } //PK
         public string PlayerName { get; set; } = string.Empty;
         public long CP { get; set; } = 0;
-        public int WatchtowerLevel { get; set; } = 1;
+        public string WatchtowerLevel { get; set; } = string.Empty;
         public Rank Rank { get; set; } = Rank.R1;
         public string ViolationlistSerialized { get; set; } = string.Empty;
         public List<Events> Events { get; set; } = new List<Events>();

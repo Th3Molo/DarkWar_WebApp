@@ -1,0 +1,54 @@
+﻿@page "{playername}"
+@model DarkWar_WebApp.Pages.PlayerDetailsModel
+@{
+    ViewData["Title"] = "Player Details";
+}
+
+<h2 class="text-light">Edit Player: @Model.PlayerName</h2>
+
+<form method="post" class="text-light">
+    <div class="form-group mb-4">
+        <label asp-for="PlayerName"></label>
+        <input asp-for="PlayerName" class="form-control bg-dark border-0 text-light" readonly />
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="CP"></label>
+        <input asp-for="CP" class="form-control bg-dark border-0 text-light" type="text" />
+        <span asp-validation-for="CP" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="SelectedRank"></label>
+        <select asp-for="SelectedRank" class="form-control bg-dark border-0 text-light" asp-items="Model.Ranks">
+        </select>
+    </div>
+
+    <div class="form-group mb-4">
+        <label asp-for="WatchtowerLevel"></label>
+        <select asp-for="WatchtowerLevel" class="form-control bg-dark border-0 text-light">
+            @for (int i = 1; i <= 60; i++)
+            {
+                var isSelected = (i.ToString() == Model.WatchtowerLevel);
+
+                if (i > 30)
+                {
+                    <option value="@i" selected="@(isSelected)">
+                        30 + @(i - 30)
+                    </option>
+                }
+                else
+                {
+                    <option value="@i" selected="@(isSelected)">
+                        @i
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary bg-dark fs-5 border-1 border-light">Save Changes</button>
+</form>
+@* <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Player.ID" onsubmit="return confirm('Are you sure to delete this Member');">
+    <button type="submit" class="btn btn-primary bg-danger fs-5 border-1 border-light">Delete Member</button>
+</form> *@

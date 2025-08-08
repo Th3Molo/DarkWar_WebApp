@@ -55,9 +55,8 @@
         input.value = withDots;
     }
 
-      function openPlayer(playerName) {
-      // Beispiel: Spielerseite öffnen
-      // URL anpassen, je nachdem wie dein Routing ist
-      window.location.href = '/player/details?name=' + encodeURIComponent(playerName);
+    function openPlayer(playerName) 
+    {
+        window.location.href = '/PlayerDetails/' + encodeURIComponent(playerName);
     }
 </script>

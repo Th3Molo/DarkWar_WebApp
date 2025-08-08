@@ -11,6 +11,7 @@ namespace DarkWar_WebApp.Pages
     public class AddPlayerModel : PageModel
     {
         #region Properties
+        private readonly ILogger<AddPlayerModel> _logger;
         private readonly AppDbContext _context;
 
         [BindProperty]
@@ -36,15 +37,16 @@ namespace DarkWar_WebApp.Pages
         public Rank SelectedRank { get; set; }
 
         [BindProperty]
-        public int WatchtowerLevel { get; set; }
+        public string WatchtowerLevel { get; set; }
 
         public IEnumerable<SelectListItem> Ranks { get; set; }
         #endregion
 
         #region Contrcutor
-        public AddPlayerModel(AppDbContext context)
+        public AddPlayerModel(AppDbContext context, ILogger<AddPlayerModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
         #endregion
 
@@ -65,8 +67,6 @@ namespace DarkWar_WebApp.Pages
             if (!ModelState.IsValid)
                 return Page();
 
-            CP = long.Parse(CP.ToString().Replace(".", ""), CultureInfo.InvariantCulture);
-
             var newPlayer = new Player
             {
                 PlayerName = PlayerName,
@@ -78,7 +78,7 @@ namespace DarkWar_WebApp.Pages
             if (!_context.Players.Any(p => p.PlayerName == newPlayer.PlayerName))
             {
                 _context.Players.Add(newPlayer);
-                _context.SaveChanges(); // oder await ... wenn async                
+                _context.SaveChanges();          
 
                 TempData["SuccessMessage"] = "Player added to Database";
                 return RedirectToPage("Overview");
@@ -87,7 +87,7 @@ namespace DarkWar_WebApp.Pages
             {
                 TempData["DoublePlayer"] = "Player already added to Database";
                 return RedirectToPage("AddPlayer");
-            }
+            }            
         }
         #endregion
     }
