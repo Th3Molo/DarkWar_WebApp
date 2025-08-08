@@ -15,16 +15,18 @@ namespace DarkWar_WebApp.Pages
         [BindProperty]
         public string PlayerName { get; set; }
 
+        private long _CP = 0;
+
         [BindProperty]
         public long CP
         {
-            get {  return CP; }
+            get => _CP;
             set 
             { 
                 if (long.TryParse(value.ToString(), out long result))
                     value = result;
 
-                CP = value;
+                _CP = value;
             }
         }
 

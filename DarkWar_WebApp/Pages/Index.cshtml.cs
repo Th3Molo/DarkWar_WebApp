@@ -23,7 +23,7 @@ namespace DarkWar_WebApp.Pages
             if (username == "admin" && password == "geheim1234")
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
-                return RedirectToPage("/AddPlayer");
+                return RedirectToPage("/Homepage");
             }
 
             ModelState.AddModelError("", "Login fehlgeschlagen");
