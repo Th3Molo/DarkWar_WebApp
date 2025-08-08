@@ -2,6 +2,7 @@ using DarkWar_WebApp.data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Primitives;
 using System.Globalization;
 using System.Linq;
 
@@ -22,11 +23,11 @@ namespace DarkWar_WebApp.Pages
         {
             get => _CP;
             set 
-            { 
-                if (long.TryParse(value.ToString(), out long result))
-                    value = result;
+            {
+                string cpvalue = value.ToString().Replace(".", "");
 
-                _CP = value;
+                if (long.TryParse(cpvalue, CultureInfo.InvariantCulture, out long result))
+                    _CP = result;
             }
         }
 
@@ -63,6 +64,8 @@ namespace DarkWar_WebApp.Pages
         {
             if (!ModelState.IsValid)
                 return Page();
+
+            CP = long.Parse(CP.ToString().Replace(".", ""), CultureInfo.InvariantCulture);
 
             var newPlayer = new Player
             {
