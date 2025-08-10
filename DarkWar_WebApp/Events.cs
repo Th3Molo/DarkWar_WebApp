@@ -3,10 +3,14 @@
     public class Events
     {
         #region Properties
-        public int ID { get; set; } //PK
+        public int ID { get; set; } // PK
+        public int PlayerID { get; set; } // FK
+
         public string Eventname { get; set; } = string.Empty;
         public bool HaveParticipated { get; set; } = false;
         public double PointsGet { get; set; } = 0;
+
+        public Player Player { get; set; } // Navigation Property
         #endregion
 
         #region Constructor

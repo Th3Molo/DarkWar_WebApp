@@ -7,20 +7,20 @@
 <h2 class="text-light mb-2">Add Player</h2>
 
 <form method="post" class="flex-fill d-flex flex-column">
-    <div class="col-md-6 d-flex flex-column text-light">
+    <div class="d-flex flex-column text-light">
             <div class="form-group mb-4">
                 <label asp-for="PlayerName"></label>
-                <input asp-for="PlayerName" class="form-control bg-dark border-0 text-light" id="playerNameInput" oninput="updatePreview()" />
+                <input asp-for="PlayerName" class="form-control bg-dark border-0 text-light" type="text" id="playerNameInput" oninput="updatePreviewName()" />
             </div>
 
             <div class="form-group mb-4">
                 <label asp-for="CP"></label>
-                <input asp-for="CP" class="form-control bg-dark border-0 text-light" type="text" id="cpInput" oninput="updatePreview()" />
+                <input asp-for="CP" class="form-control bg-dark border-0 text-light" type="text" id="cpInput" oninput="updatePreviewCP()" />
             </div>
 
             <div class="form-group mb-4">
                 <label asp-for="SelectedRank"></label>
-                <select asp-for="SelectedRank" class="form-control bg-dark border-0 text-light" id="rankInput" oninput="updatePreview()">
+                <select asp-for="SelectedRank" class="form-control bg-dark border-0 text-light" id="rankInput" onchange="updatePreviewRank()">
                     <option value="">-- Choose Rank --</option>
                     @foreach (var rank in Model.Ranks)
                     {
@@ -31,7 +31,7 @@
 
             <div class="form-group mb-4">
                 <label asp-for="WatchtowerLevel"></label>
-                <select asp-for="WatchtowerLevel" class="form-control bg-dark border-0 text-light" id="watchtowerInput" oninput="updatePreview()">
+                    <select asp-for="WatchtowerLevel" class="form-control bg-dark border-0 text-light" id="watchtowerInput" onchange="updatePreviewWatchtower()">
                     @for (int i = 1; i <= 60; i++)
                     {                        
                         if (i > 30)
@@ -52,10 +52,7 @@
         <div class="card bg-transparent text-light flex-fill border-0">📝 Preview</div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item bg-dark text-light mb-4"><strong>Name:</strong> <span id="previewName">-</span></li>
-            <li class="list-group-item bg-dark text-light mb-4">
-                <strong>CP:</strong>
-                <span id="previewCP">@Model.CP.ToString("N0")</span>
-            </li>
+            <li class="list-group-item bg-dark text-light mb-4"><strong>CP:</strong><span id="previewCP">@Model.CP.ToString("N0")</span></li>
             <li class="list-group-item bg-dark text-light mb-4"><strong>Rank:</strong> <span id="previewRank">-</span></li>
             <li class="list-group-item bg-dark text-light mb-4"><strong>Watchtower Level:</strong> <span id="previewWatchtower">-</span></li>
         </ul>
@@ -66,13 +63,46 @@
 </form>
 
 <script>
-    function updatePreview() {
-        document.getElementById("previewName").innerText = document.getElementById("playerNameInput").value || "-";
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputs = ["playerNameInput", "cpInput", "rankInput", "watchtowerInput"];
+
+        // Event-Listener setzen
+        inputs.forEach(id => {const el = document.getElementById(id);
+            if (!el) return;
+
+            if (el.tagName === "SELECT") 
+            {
+                el.addEventListener("change", updatePreview);
+            } 
+            else if (el.tagName === "INPUT")
+            {
+                el.addEventListener("input", updatePreview);
+            }
+        });
+
+        // Direkt einmal ausführen, damit beim Laden alles angezeigt wird
+        updatePreview();
+    });
+
+    function updatePreviewCP() {
         document.getElementById("previewCP").innerText = document.getElementById("cpInput").value || "-";
-        document.getElementById("previewRank").innerText = document.getElementById("rankInput").value || "-";
-        document.getElementById("previewWatchtower").innerText = document.getElementById("watchtowerInput").value || "-";
+    }
+
+    function updatePreviewName() {
+        document.getElementById("previewName").innerText = document.getElementById("playerNameInput").value || "-";
+    }
+
+    function updatePreviewRank() {
+        const rankSelect = document.getElementById("rankInput");
+        document.getElementById("previewRank").innerText = rankSelect.options[rankSelect.selectedIndex]?.text || "-";
+    }
+
+    function updatePreviewWatchtower(){
+        const watchtowerSelect = document.getElementById("watchtowerInput");
+        document.getElementById("previewWatchtower").innerText = watchtowerSelect.options[watchtowerSelect.selectedIndex]?.text || "-";
     }
 </script>
+
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -88,25 +118,15 @@
     </div>
 }
 
-
-
 @section Scripts {
     <script>
         $(document).ready(function () {
             $('.watchtower-select').select2({
-                minimumResultsForSearch: Infinity, // kein Suchfeld
+                minimumResultsForSearch: Infinity,
                 dropdownAutoWidth: true,
                 dropdownCssClass: "limit-height",
             });
         });
-    </script>
-
-    <script>
-        function updatePreview() {
-        const cpInput = document.getElementById("cpInput").value;
-        const cpFormatted = Number(cpInput.replace(/\D/g, '')).toLocaleString('de-DE');
-        document.getElementById("previewCP").textContent = cpFormatted || '-';
-    }
     </script>
 
     <style>

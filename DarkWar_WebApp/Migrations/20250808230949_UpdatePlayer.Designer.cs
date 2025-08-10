@@ -3,6 +3,7 @@ using System;
 using DarkWar_WebApp.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,34 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DarkWar_WebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250808230949_UpdatePlayer")]
+    partial class UpdatePlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
-
-            modelBuilder.Entity("DarkWar_WebApp.CPEntry", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PlayerID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("Value")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("PlayerID");
-
-                    b.ToTable("CPEntries");
-                });
 
             modelBuilder.Entity("DarkWar_WebApp.Events", b =>
                 {
@@ -52,7 +33,7 @@ namespace DarkWar_WebApp.Migrations
                     b.Property<bool>("HaveParticipated")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PlayerID")
+                    b.Property<int?>("PlayerID")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("PointsGet")
@@ -116,32 +97,15 @@ namespace DarkWar_WebApp.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("DarkWar_WebApp.CPEntry", b =>
-                {
-                    b.HasOne("DarkWar_WebApp.Player", "Player")
-                        .WithMany("CP_List")
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Player");
-                });
-
             modelBuilder.Entity("DarkWar_WebApp.Events", b =>
                 {
-                    b.HasOne("DarkWar_WebApp.Player", "Player")
+                    b.HasOne("DarkWar_WebApp.Player", null)
                         .WithMany("Events")
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Player");
+                        .HasForeignKey("PlayerID");
                 });
 
             modelBuilder.Entity("DarkWar_WebApp.Player", b =>
                 {
-                    b.Navigation("CP_List");
-
                     b.Navigation("Events");
                 });
 #pragma warning restore 612, 618

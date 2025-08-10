@@ -32,7 +32,6 @@ namespace DarkWar_WebApp.Pages
             }
         }
 
-
         [BindProperty]
         public Rank SelectedRank { get; set; }
 
@@ -78,7 +77,20 @@ namespace DarkWar_WebApp.Pages
             if (!_context.Players.Any(p => p.PlayerName == newPlayer.PlayerName))
             {
                 _context.Players.Add(newPlayer);
-                _context.SaveChanges();          
+                _context.SaveChanges();
+
+
+                CPEntry cpentry = new()
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    Player = newPlayer,
+                    PlayerID = newPlayer.ID,
+                    Value = CP,
+                };
+
+                newPlayer.CP_List.Add(cpentry);
+
+                DbTools.AddCpEntry(newPlayer.ID, newPlayer.CP_List);
 
                 TempData["SuccessMessage"] = "Player added to Database";
                 return RedirectToPage("Overview");

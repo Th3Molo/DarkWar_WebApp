@@ -29,6 +29,8 @@ namespace DarkWar_WebApp.Pages
         [BindProperty]
         public string WatchtowerLevel { get; set; }
 
+        public List<CPEntry> CP_List { get; set; }
+
         public IEnumerable<SelectListItem> Ranks { get; set; }
 
         public IActionResult OnGet(string playerName)
@@ -38,11 +40,14 @@ namespace DarkWar_WebApp.Pages
             if (player == null)
                 return NotFound();
 
+            player.CP_List = DbTools.LoadCpEntry(player.ID);
+
             // Felder mit den Werten des Spielers füllen
             PlayerName = player.PlayerName;
             CP = player.CP;
             SelectedRank = player.Rank;
             WatchtowerLevel = player.WatchtowerLevel;
+            CP_List = player.CP_List;
 
             // Dropdown für Ranks
             Ranks = Enum.GetValues(typeof(Rank))
@@ -69,6 +74,9 @@ namespace DarkWar_WebApp.Pages
             player.CP = CP;
             player.Rank = SelectedRank;
             player.WatchtowerLevel = WatchtowerLevel;
+            player.AddCpToList(CP, DateOnly.FromDateTime(DateTime.Now));
+
+            DbTools.AddCpEntry(player.ID, player.CP_List);
 
             _db.SaveChanges();
 
