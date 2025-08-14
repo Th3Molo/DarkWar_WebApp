@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DarkWar_WebApp.data
@@ -13,7 +14,7 @@ namespace DarkWar_WebApp.data
             {
                 connection.Open();
 
-                using (var command = new SqliteCommand("SELECT date, value FROM CPEntries WHERE player_id = @pid", connection))
+                using (var command = new SqliteCommand("SELECT date, value FROM CPEntries WHERE playerid = @pid", connection))
                 {
                     command.Parameters.AddWithValue("@pid", playerId);
 
@@ -66,5 +67,18 @@ namespace DarkWar_WebApp.data
             }
         }
 
+        /// <summary>
+        /// Comapares the player from db and new player
+        /// </summary>
+        /// <param name="newPlayer"> new player </param>
+        /// <param name="dbPlayers"> Database Player list</param>
+        /// <returns> true player can add to db; false if not</returns>
+        public static bool ComparePlayer(Player newPlayer, List<Player> dbPlayers)
+        {
+            if (dbPlayers.Any(player => player.ID == newPlayer.ID))
+                return true;
+            else
+                return false;
+        }
     }
 }

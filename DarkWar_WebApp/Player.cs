@@ -40,5 +40,18 @@ namespace DarkWar_WebApp
 
             CP_List.Add(cpentry);            
         }
+
+        public static Rank GetRank(string rank)
+        {
+            switch(rank)
+            {
+                case "1": return Rank.R1;
+                case "2": return Rank.R2;
+                case "3": return Rank.R3;
+                case "4": return Rank.R4;
+                case "5": return Rank.R5;
+                default: return Rank.R1; 
+            }
+        }
     }
 }
