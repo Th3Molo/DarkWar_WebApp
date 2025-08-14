@@ -13,7 +13,7 @@ namespace DarkWar_WebApp.data
             {
                 connection.Open();
 
-                using (var command = new SqliteCommand("SELECT date, value FROM CP_List WHERE player_id = @pid", connection))
+                using (var command = new SqliteCommand("SELECT date, value FROM CPEntries WHERE player_id = @pid", connection))
                 {
                     command.Parameters.AddWithValue("@pid", playerId);
 
@@ -43,7 +43,7 @@ namespace DarkWar_WebApp.data
                 connection.Open();
 
                 // Tabelle erstellen (falls noch nicht vorhanden)
-                using (var command = new SqliteCommand(@"CREATE TABLE IF NOT EXISTS CP_List (
+                using (var command = new SqliteCommand(@"CREATE TABLE IF NOT EXISTS CPEntries (
                                                         player_id INTEGER NOT NULL,
                                                         date TEXT NOT NULL,
                                                         value INTEGER NOT NULL,
@@ -55,7 +55,7 @@ namespace DarkWar_WebApp.data
                 // Einfügen/aktualisieren
                 foreach (var item in cplist)
                 {
-                    using (var command = new SqliteCommand("INSERT OR REPLACE INTO CP_List (player_id, date, value) VALUES (@pid, @date, @value)", connection))
+                    using (var command = new SqliteCommand("INSERT OR REPLACE INTO CPEntries (player_id, date, value) VALUES (@pid, @date, @value)", connection))
                     {
                         command.Parameters.AddWithValue("@pid", playerId);
                         command.Parameters.AddWithValue("@date", item.Date.ToString("yyyy-MM-dd"));
