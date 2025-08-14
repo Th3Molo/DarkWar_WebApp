@@ -24,6 +24,13 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/");                   // schützt alle Seiten
+    options.Conventions.AllowAnonymousToPage("/Login");         // Login-Seite bleibt frei zugänglich
+    options.Conventions.AllowAnonymousToPage("/Registration");  // Registrierung bleibt frei zugänglich
+});
+
 builder.Services.AddHttpContextAccessor(); // <-- wichtig, wenn du in Razor auf Session zugreifst
 
 /*builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=players.db"));*/

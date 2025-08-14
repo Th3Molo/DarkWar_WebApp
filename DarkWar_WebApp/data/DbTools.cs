@@ -75,7 +75,9 @@ namespace DarkWar_WebApp.data
         /// <returns> true player can add to db; false if not</returns>
         public static bool ComparePlayer(Player newPlayer, List<Player> dbPlayers)
         {
-            if (dbPlayers.Any(player => player.ID == newPlayer.ID))
+            if (dbPlayers.Any(player => newPlayer.ID != 0 &&
+                                        player.ID == newPlayer.ID ||
+                                        player.PlayerName == newPlayer.PlayerName))
                 return true;
             else
                 return false;
