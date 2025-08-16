@@ -26,7 +26,6 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor(); // <-- wichtig, wenn du in Razor auf Session zugreifst
 
-/*builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=players.db"));*/
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Logging.AddConsole();

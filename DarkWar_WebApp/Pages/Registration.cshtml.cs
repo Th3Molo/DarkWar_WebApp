@@ -24,7 +24,7 @@ namespace DarkWar_WebApp.Pages
 
         protected string Decrypt(string password)
         {
-
+            return password;
         }
     }
 }
