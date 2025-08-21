@@ -1,68 +1,95 @@
 using DarkWar_WebApp.data;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Globalization;
 
-var cultureInfo = new CultureInfo("de-DE");
-CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddRazorPages();
-
-// Session aktivieren
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
+internal class Program
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
+    private static void Main(string[] args)
+    {
+        var cultureInfo = new CultureInfo("de-DE");
+        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-builder.Services.AddRazorPages(options =>
-{
-    options.Conventions.AuthorizeFolder("/");                   // schützt alle Seiten
-    options.Conventions.AllowAnonymousToPage("/Login");         // Login-Seite bleibt frei zugänglich
-    options.Conventions.AllowAnonymousToPage("/Registration");  // Registrierung bleibt frei zugänglich
-});
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpContextAccessor(); // <-- wichtig, wenn du in Razor auf Session zugreifst
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Index";
+            options.LogoutPath = "/Logout";
+        });
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddRazorPages(options =>
+        {
+            options.Conventions.AuthorizeFolder("/");
+            options.Conventions.AllowAnonymousToPage("/Index");
+            options.Conventions.AllowAnonymousToPage("/Registration");
+        });
 
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
+        // Session aktivieren
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(30);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
 
-var app = builder.Build();
+        builder.Services.AddHttpContextAccessor();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+        // DB-Context
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Logging
+        builder.Logging.AddConsole();
+        builder.Logging.AddDebug();
+
+
+        // Identity für .NET 8 konfigurieren
+        builder.Services.AddIdentityCore<IdentityUser>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = true;
+        })
+            .AddRoles<IdentityRole>()                     // optional, falls du Rollen brauchst
+            .AddEntityFrameworkStores<AppDbContext>()     // DB-Backend
+            .AddSignInManager()                           // wichtig für Login
+            .AddDefaultTokenProviders();
+
+        // Identity UI & Cookies aktivieren
+        builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+            .AddIdentityCookies();
+
+        builder.Services.AddAuthorization();
+
+        var app = builder.Build();
+
+        // Migrationen anwenden
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.Migrate();
+        }
+
+        // Pipeline
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseSession();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapRazorPages();
+
+        app.Run();
+    }
 }
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-// Session Middleware aktivieren (muss NACH `UseRouting` und VOR `UseEndpoints`)
-app.UseSession();
-
-app.UseAuthorization();
-
-app.MapRazorPages();
-
-app.Run();
