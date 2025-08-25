@@ -24,6 +24,7 @@ namespace DarkWar_WebApp.Pages
 
         public async Task OnGetAsync()
         {
+            Username = User.Identity?.Name?? HttpContext.Session.GetString("Username")?? "Gast";
             if (_context.Messages != null)
                 Messages = await _context.Messages
                                          .OrderByDescending(m => m.Timestamp)

@@ -45,10 +45,10 @@ namespace DarkWar_WebApp.data
 
                 // Tabelle erstellen (falls noch nicht vorhanden)
                 using (var command = new SqliteCommand(@"CREATE TABLE IF NOT EXISTS CPEntries (
-                                                        player_id INTEGER NOT NULL,
+                                                        playerid INTEGER NOT NULL,
                                                         date TEXT NOT NULL,
                                                         value INTEGER NOT NULL,
-                                                        PRIMARY KEY (player_id, date))", connection))
+                                                        PRIMARY KEY (playerid, date))", connection))
                                                         {
                                                             command.ExecuteNonQuery();
                                                         }
@@ -56,7 +56,7 @@ namespace DarkWar_WebApp.data
                 // Einfügen/aktualisieren
                 foreach (var item in cplist)
                 {
-                    using (var command = new SqliteCommand("INSERT OR REPLACE INTO CPEntries (player_id, date, value) VALUES (@pid, @date, @value)", connection))
+                    using (var command = new SqliteCommand("INSERT OR REPLACE INTO CPEntries (playerid, date, value) VALUES (@pid, @date, @value)", connection))
                     {
                         command.Parameters.AddWithValue("@pid", playerId);
                         command.Parameters.AddWithValue("@date", item.Date.ToString("yyyy-MM-dd"));

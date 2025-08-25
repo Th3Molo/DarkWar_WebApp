@@ -38,9 +38,18 @@ namespace DarkWar_WebApp.Pages
         public async Task<IActionResult> OnPostAsync(IFormFile csvFile)
         {
             List<Player> playerlist = new List<Player>();
+
             if (csvFile == null || csvFile.Length == 0)
             {
+                ModelState.Remove("csvFile"); // entfernt die Auto-Meldung
                 ModelState.AddModelError(string.Empty, "Please Upload CSV Data");
+
+                var orderedtable = _context.Players.OrderByDescending(p => p.Rank)
+                                                   .ThenByDescending(p => p.CP)
+                                                   .ThenBy(p => p.PlayerName);
+
+                PlayerList = orderedtable.ToList();
+
                 return Page();
             }
 

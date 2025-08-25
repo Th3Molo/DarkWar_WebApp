@@ -74,9 +74,7 @@ namespace DarkWar_WebApp.Pages
             player.CP = CP;
             player.Rank = SelectedRank;
             player.WatchtowerLevel = WatchtowerLevel;
-            player.AddCpToList(CP, DateOnly.FromDateTime(DateTime.Now));
-
-            DbTools.AddCpEntry(player.ID, player.CP_List);
+            player.AddCpToList(CP, DateOnly.FromDateTime(DateTime.Now));            
 
             _db.SaveChanges();
 

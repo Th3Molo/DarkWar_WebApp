@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DarkWar_WebApp.data;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Numerics;
 
 namespace DarkWar_WebApp
 {
@@ -38,7 +40,7 @@ namespace DarkWar_WebApp
                 Value = cp,
             };
 
-            CP_List.Add(cpentry);            
+            CompareCPEntry(cpentry);
         }
 
         public static Rank GetRank(string rank)
@@ -52,6 +54,14 @@ namespace DarkWar_WebApp
                 case "5": return Rank.R5;
                 default: return Rank.R1; 
             }
+        }
+
+        private void CompareCPEntry(CPEntry cpentry)
+        {
+            if (!CP_List.Any(entry => entry.Value == cpentry.Value))
+            {
+                DbTools.AddCpEntry(ID, CP_List);
+            }            
         }
     }
 }

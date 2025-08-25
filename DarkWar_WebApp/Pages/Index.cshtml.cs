@@ -1,3 +1,5 @@
+using DarkWar_WebApp.data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -5,13 +7,25 @@ namespace DarkWar_WebApp.Pages
 {
     public class IndexModel : PageModel
     {
+        #region Properties
+        private readonly AppDbContext _db;
+
         [BindProperty]
         public string Username { get; set; }
 
         [BindProperty]
         public string Password { get; set; }
 
+        [BindProperty]
+        public string ReturnUrl { get; set; }
+
         public bool LoginFailed { get; set; }
+        #endregion
+
+        public IndexModel(AppDbContext db)
+        {
+            _db = db;
+        }
 
         public IActionResult OnGet()
         {
@@ -24,15 +38,31 @@ namespace DarkWar_WebApp.Pages
             return Page();
         }
 
-        public IActionResult OnPost(string username, string password, string returnUrl = null)
+        public IActionResult OnPost()
         {
-            if (username == "admin" && password == "geheim1234")
+            var user = _db.AppUsers.SingleOrDefault(u => u.Username == Username.ToLower());
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User not found");
+                ModelState.AddModelError("", "Go to registration or try another User");
+                return Page();
+            }
+
+            var hasher = new PasswordHasher<AppUser>();
+            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, Password);
+
+            if (result == PasswordVerificationResult.Success)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                HttpContext.Session.SetString("Username", user.Username);
+
+                if (!string.IsNullOrEmpty(ReturnUrl))
+                    return LocalRedirect(ReturnUrl);
+
                 return LocalRedirect("/Homepage");
             }
 
-            ModelState.AddModelError("", "Login fehlgeschlagen");
+            ModelState.AddModelError("", "Password incorrect");
             return Page();
         }
 

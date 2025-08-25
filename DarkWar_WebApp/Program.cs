@@ -13,15 +13,8 @@ internal class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.ConfigureApplicationCookie(options =>
-        {
-            options.LoginPath = "/Index";
-            options.LogoutPath = "/Logout";
-        });
-
         builder.Services.AddRazorPages(options =>
         {
-            options.Conventions.AuthorizeFolder("/");
             options.Conventions.AllowAnonymousToPage("/Index");
             options.Conventions.AllowAnonymousToPage("/Registration");
         });
@@ -44,23 +37,6 @@ internal class Program
         // Logging
         builder.Logging.AddConsole();
         builder.Logging.AddDebug();
-
-
-        // Identity für .NET 8 konfigurieren
-        builder.Services.AddIdentityCore<IdentityUser>(options =>
-        {
-            options.SignIn.RequireConfirmedAccount = true;
-        })
-            .AddRoles<IdentityRole>()                     // optional, falls du Rollen brauchst
-            .AddEntityFrameworkStores<AppDbContext>()     // DB-Backend
-            .AddSignInManager()                           // wichtig für Login
-            .AddDefaultTokenProviders();
-
-        // Identity UI & Cookies aktivieren
-        builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
-            .AddIdentityCookies();
-
-        builder.Services.AddAuthorization();
 
         var app = builder.Build();
 

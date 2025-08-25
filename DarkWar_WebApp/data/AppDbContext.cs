@@ -11,8 +11,8 @@ namespace DarkWar_WebApp.data
         public DbSet<Player> Players { get; set; }
         public DbSet<CPEntry> CPEntries { get; set; }
         public DbSet<Events> Events { get; set; }
-
         public DbSet<Message> Messages { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
